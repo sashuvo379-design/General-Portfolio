@@ -1,393 +1,924 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio ~ Saad Ahmad Shuvo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <title>Saad Ahmad Shuvo | Portfolio</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ==========================================================================
+           1. CSS VARIABLES & SYSTEM ARCHITECTURE
+           ========================================================================== */
+        :root {
+            --bg-main: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent-primary: #2563eb;
+            --accent-secondary: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --border-color: #e2e8f0;
+            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --accent: #ec4899;
-            --dark: #1e293b;
-            --gray: #64748b;
-            --light: #f8fafc;
-            --card-bg: rgba(255, 255, 255, 0.9);
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #60a5fa;
+            --accent-glow: rgba(96, 165, 250, 0.25);
+            --border-color: #334155;
+            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--dark);
-            line-height: 1.7;
-            min-height: 100vh;
-            padding: 40px 20px;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
 
-        /* ===== HERO SECTION ===== */
-        .hero {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 50px 40px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            margin-bottom: 30px;
-            animation: fadeInUp 0.8s ease;
+        /* ==========================================================================
+           2. PRELOADER & UTILITIES
+           ========================================================================== */
+        #preloader {
+            position: fixed; inset: 0; background: var(--bg-main); z-index: 9999;
+            display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease;
         }
-
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            font-style: normal;
+        .loader {
+            width: 50px; height: 50px; border: 5px solid var(--border-color);
+            border-top-color: var(--accent-primary); border-radius: 50%; animation: spin 1s linear infinite;
         }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        .hero p {
-            color: var(--gray);
-            font-size: 1.05rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* ===== CARD / SECTION ===== */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            animation: fadeInUp 0.8s ease;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-        }
-
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        .section-padding { padding: 100px 0; }
+        .section-header { text-align: center; margin-bottom: 60px; }
         .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
-            padding-bottom: 15px;
+            font-size: 2.5rem; margin-bottom: 15px; display: inline-block;
+            background: linear-gradient(to right, var(--accent-primary), #8b5cf6);
+            -webkit-background-clip: text; color: transparent; 
+        }
+        .section-subtitle { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px; padding: 12px 28px;
+            border-radius: 50px; font-weight: 600; transition: var(--transition); cursor: pointer;
+            border: none; font-size: 1rem;
+        }
+        .btn-primary { background: var(--accent-primary); color: #fff; box-shadow: 0 4px 15px var(--accent-glow); }
+        .btn-primary:hover { transform: translateY(-3px); background: var(--accent-secondary); box-shadow: 0 8px 25px var(--accent-glow); }
+        .btn-outline { background: transparent; border: 2px solid var(--accent-primary); color: var(--text-primary); }
+        .btn-outline:hover { background: var(--accent-primary); color: #fff; }
+
+        /* ==========================================================================
+           3. NAVIGATION BAR
+           ========================================================================== */
+        .navbar {
+            position: fixed; top: 0; width: 100%; padding: 20px 0; z-index: 1000;
+            transition: var(--transition); backdrop-filter: blur(10px); border-bottom: 1px solid transparent;
+        }
+        .navbar.scrolled {
+            padding: 15px 0; background: rgba(var(--bg-secondary), 0.95);
+            border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
+        .logo span { color: var(--accent-primary); }
+        .nav-menu { display: flex; gap: 30px; align-items: center; }
+        .nav-link { font-weight: 500; font-size: 0.95rem; color: var(--text-primary); position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0;
+            height: 2px; background: var(--accent-primary); transition: var(--transition);
+        }
+        .nav-link:hover::after { width: 100%; }
+        .nav-controls { display: flex; align-items: center; gap: 15px; }
+        .theme-btn {
+            background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary);
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: var(--transition);
+        }
+        .theme-btn:hover { background: var(--border-color); }
+        .mobile-menu-btn {
+            display: none; background: none; border: none; font-size: 1.5rem;
+            color: var(--text-primary); cursor: pointer; z-index: 1001;
         }
 
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 10px;
+        /* ==========================================================================
+           4. HERO SECTION
+           ========================================================================== */
+        .hero { min-height: 100vh; display: flex; align-items: center; position: relative; padding-top: 80px; overflow: hidden; }
+        .hero-content { flex: 1; max-width: 650px; z-index: 2; }
+        .greeting {
+            color: var(--accent-primary); font-weight: 600; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 20px; display: block;
+        }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; margin-bottom: 20px; }
+        .typing-text { font-size: 1.5rem; color: var(--text-secondary); margin-bottom: 30px; min-height: 40px; }
+        .typing-text span { color: var(--accent-primary); font-weight: 600; }
+        .hero-desc { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 550px; }
+        .hero-cta { display: flex; gap: 20px; flex-wrap: wrap; }
+        .hero-visual { flex: 1; position: relative; z-index: 1; display: flex; justify-content: center; }
+        .blob {
+            position: absolute; width: 500px; height: 500px;
+            background: linear-gradient(180deg, rgba(37, 99, 235, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            animation: morph 8s ease-in-out infinite; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            z-index: -1; filter: blur(20px);
+        }
+        @keyframes morph {
+            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        }
+        .hero-img-box {
+            width: 350px; height: 450px; border-radius: 30px; overflow: hidden;
+            border: 8px solid var(--bg-secondary); box-shadow: var(--card-shadow);
+            transform: rotate(3deg); transition: var(--transition);
+        }
+        .hero-img-box:hover { transform: rotate(0deg) scale(1.02); }
+        .hero-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ==========================================================================
+           5. ABOUT SECTION & SKILLS
+           ========================================================================== */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .about-text p { margin-bottom: 20px; color: var(--text-secondary); font-size: 1.05rem; }
+        .personal-info {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0;
+            background: var(--bg-secondary); padding: 30px; border-radius: 20px;
+            border: 1px solid var(--border-color); box-shadow: var(--card-shadow);
+        }
+        .info-item { display: flex; flex-direction: column; gap: 5px; }
+        .info-label { font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600;}
+        .info-value { font-weight: 600; color: var(--text-primary); }
+
+        .skills-container h3 { margin-bottom: 25px; font-size: 1.5rem; }
+        .skill-item { margin-bottom: 20px; }
+        .skill-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 500; }
+        .skill-bar { height: 10px; background: var(--border-color); border-radius: 10px; overflow: hidden; }
+        .skill-progress {
+            height: 100%; background: linear-gradient(90deg, var(--accent-primary), #8b5cf6);
+            border-radius: 10px; width: 0; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ===== PROFILE IMAGE ===== */
-        .profile-img {
-            display: block;
-            margin: 0 auto 30px;
-            width: 220px;
-            height: 260px;
-            object-fit: cover;
-            border-radius: 20px;
-            border: 5px solid white;
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3);
-            transition: transform 0.3s ease;
-        }
+        /* ==========================================================================
+           6. EDUCATION TIMELINE
+           ========================================================================== */
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: var(--border-color); }
+        .timeline-item { margin-bottom: 60px; position: relative; width: 50%; padding: 0 40px; }
+        .timeline-item:nth-child(odd) { left: 0; text-align: right; }
+        .timeline-item:nth-child(even) { left: 50%; text-align: left; }
+        .timeline-dot { position: absolute; top: 0; width: 20px; height: 20px; background: var(--accent-primary); border: 4px solid var(--bg-main); border-radius: 50%; z-index: 2; }
+        .timeline-item:nth-child(odd) .timeline-dot { right: -10px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -10px; }
+        .timeline-content { background: var(--bg-secondary); padding: 30px; border-radius: 20px; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); transition: var(--transition); }
+        .timeline-content:hover { transform: translateY(-5px); border-color: var(--accent-primary); }
+        .timeline-date { color: var(--accent-primary); font-weight: 700; margin-bottom: 10px; display: block; }
+        .timeline-title { font-size: 1.3rem; margin-bottom: 5px; }
+        .timeline-inst { color: var(--text-secondary); font-weight: 500; margin-bottom: 15px; }
+        .timeline-grade { display: inline-block; background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; }
 
-        .profile-img:hover {
-            transform: scale(1.05);
-        }
+        /* ==========================================================================
+           7. ADMISSIONS HALL OF FAME & GALLERY GRID
+           ========================================================================== */
+        .filter-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 24px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); border-radius: 30px; cursor: pointer; font-weight: 500; transition: var(--transition); }
+        .filter-btn.active, .filter-btn:hover { background: var(--accent-primary); color: white; border-color: var(--accent-primary); }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .gallery-card { background: var(--bg-secondary); border-radius: 20px; overflow: hidden; box-shadow: var(--card-shadow); border: 1px solid var(--border-color); transition: var(--transition); }
+        .gallery-card:hover { transform: translateY(-8px); }
+        .card-img-wrapper { position: relative; height: 180px; overflow: hidden; background: var(--border-color); }
+        .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .gallery-card:hover .card-img-wrapper img { transform: scale(1.08); }
+        .card-overlay { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); display: flex; justify-content: center; align-items: center; opacity: 0; transition: var(--transition); }
+        .gallery-card:hover .card-overlay { opacity: 1; }
+        .view-btn { background: #fff; color: var(--text-primary); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: none; font-size: 1.1rem; transform: translateY(15px); transition: var(--transition); }
+        .gallery-card:hover .view-btn { transform: translateY(0); }
+        .card-body { padding: 22px; }
+        .uni-rank { color: var(--accent-primary); font-size: 0.9rem; font-weight: 700; margin-bottom: 5px;}
+        .uni-name { font-size: 1.1rem; margin-bottom: 12px; line-height: 1.3; }
+        .status { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-block; }
+        .status.selected { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .status.waiting { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
 
-        /* ===== INFO LIST ===== */
-        .info-list {
-            list-style: none;
-            max-width: 500px;
-            margin: 0 auto;
+        /* ==========================================================================
+           8. CONTACT & WHATSAPP FORM
+           ========================================================================== */
+        .contact-wrapper {
+            background: var(--bg-secondary); border-radius: 30px; padding: 60px;
+            box-shadow: var(--card-shadow); border: 1px solid var(--border-color);
+            display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px;
         }
+        .contact-info h3 { font-size: 2rem; margin-bottom: 20px; }
+        .contact-info p { color: var(--text-secondary); margin-bottom: 40px; }
+        .contact-method { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
+        .method-icon { width: 60px; height: 60px; background: rgba(37, 99, 235, 0.1); color: var(--accent-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; transition: var(--transition); }
+        .contact-method:hover .method-icon { background: var(--accent-primary); color: #fff; transform: scale(1.1); }
+        .method-details h4 { margin-bottom: 5px; }
+        .method-details a, .method-details span { color: var(--text-secondary); transition: color 0.3s; }
+        .method-details a:hover { color: var(--accent-primary); }
 
-        .info-list li {
-            background: rgba(99, 102, 241, 0.08);
-            padding: 14px 20px;
-            margin-bottom: 12px;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary);
-            transition: all 0.3s ease;
+        .contact-form { display: flex; flex-direction: column; gap: 20px; }
+        .form-group { position: relative; }
+        .form-control {
+            width: 100%; padding: 16px 20px; background: var(--bg-main);
+            border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-primary);
+            font-family: inherit; font-size: 1rem; transition: var(--transition);
         }
+        .form-control:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 4px var(--accent-glow); }
+        textarea.form-control { height: 150px; resize: vertical; }
 
-        .info-list li:hover {
-            background: rgba(99, 102, 241, 0.15);
-            transform: translateX(8px);
+        /* ==========================================================================
+           9. FOOTER
+           ========================================================================== */
+        footer { background: var(--bg-secondary); padding: 40px 0; text-align: center; border-top: 1px solid var(--border-color); margin-top: 50px; }
+        .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .social-links a {
+            width: 45px; height: 45px; border-radius: 50%; background: var(--bg-main);
+            border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); color: var(--text-secondary);
         }
+        .social-links a:hover { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); transform: translateY(-5px); }
 
-        .info-list b {
-            color: var(--primary-dark);
+        /* ==========================================================================
+           10. LIGHTBOX MODAL & ANIMATIONS
+           ========================================================================== */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000;
+            display: flex; justify-content: center; align-items: center; opacity: 0;
+            visibility: hidden; transition: var(--transition); backdrop-filter: blur(10px);
         }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content { max-width: 90%; max-height: 90vh; border-radius: 10px; transform: scale(0.9); transition: transform 0.4s; }
+        .modal.active .modal-content { transform: scale(1); }
+        .close-modal { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 2.5rem; cursor: pointer; transition: var(--transition); }
+        .close-modal:hover { color: var(--accent-primary); transform: rotate(90deg); }
 
-        /* ===== TABLES ===== */
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: 16px;
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* ==========================================================================
+           11. RESPONSIVE MEDIA QUERIES
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .hero { flex-direction: column; text-align: center; padding-top: 120px; }
+            .hero-cta { justify-content: center; }
+            .hero-visual { margin-top: 50px; }
+            .about-grid, .contact-wrapper { grid-template-columns: 1fr; }
+            .timeline::before { left: 30px; }
+            .timeline-item { width: 100%; padding-left: 80px; padding-right: 0; }
+            .timeline-item:nth-child(odd), .timeline-item:nth-child(even) { left: 0; text-align: left; }
+            .timeline-item:nth-child(odd) .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 20px; right: auto; }
+            .contact-wrapper { padding: 40px 20px; }
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        thead {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        }
-
-        th {
-            color: white;
-            padding: 16px 14px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        td {
-            padding: 14px;
-            border-bottom: 1px solid #e2e8f0;
-            color: var(--dark);
-            font-size: 0.92rem;
-        }
-
-        tbody tr {
-            background: white;
-            transition: background 0.25s ease;
-        }
-
-        tbody tr:nth-child(even) {
-            background: #f8fafc;
-        }
-
-        tbody tr:hover {
-            background: rgba(99, 102, 241, 0.08);
-        }
-
-        td a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 6px 14px;
-            background: rgba(99, 102, 241, 0.1);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        td a:hover {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        /* Status badge styling */
-        .status-selected {
-            color: #059669;
-            font-weight: 600;
-        }
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-menu {
+                position: absolute; top: 100%; left: 0; width: 100%;
+                background: var(--bg-secondary); flex-direction: column; gap: 0;
+                border-bottom: 1px solid var(--border-color);
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                transition: clip-path 0.4s ease-in-out;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
-            .hero h1 { font-size: 1.8rem; }
-            .card { padding: 25px 20px; }
-            .section-title { font-size: 1.5rem; }
-            th, td { padding: 10px 8px; font-size: 0.8rem; }
+            .nav-menu.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+            .nav-link { display: block; padding: 15px 20px; border-bottom: 1px solid var(--border-color); }
+            .nav-link::after { display: none; }
+            
+            .hero h1 { font-size: 2.2rem; }
+            .personal-info { grid-template-columns: 1fr; }
+            .blob { width: 300px; height: 300px; }
+            .hero-img-box { width: 280px; height: 360px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
 
-        <!-- ===== HERO ===== -->
-        <header class="hero">
-            <h1>Saad Ahmad Shuvo</h1>
-            <p>Assalamu Alaikum. I am Saad Ahmad Shuvo, a student of Applied Statistics and Data Science at the University of Dhaka. Having completed my Higher Secondary education from Brahmanbaria Government College, I have developed a strong interest in data-driven problem-solving, personal development, and counseling. Alongside my academic journey, I actively collaborate with various educational institutes and organizations, contributing to initiatives focused on student support, guidance, and community development.</p>        </header>
-
-        <!-- ===== PERSONAL INFORMATION ===== -->
-        <section class="card">
-            <h2 class="section-title">Personal Information</h2>
-            <img src="Main Application Face.png" alt="Saad Ahmad Shuvo" class="profile-img">
-            <ul class="info-list">
-                <li><b>Name:</b> Saad Ahmad Shuvo</li>
-                <li><b>Father's Name:</b> Hanif Ahmed</li>
-                <li><b>Mother's Name:</b> Nepa Akhter</li>
-                <li><b>Date of Birth:</b> 15<sup>th</sup> Sept 2007</li>
-                <li><b>Religion:</b> Islam</li>
-            </ul>
-        </section>
-
-        <!-- ===== ACADEMIC INFORMATION ===== -->
-        <section class="card">
-            <h2 class="section-title">Academic Information</h2>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Exam Name</th>
-                            <th>Board/Inst.</th>
-                            <th>Department</th>
-                            <th>Grade</th>
-                            <th>Year</th>
-                            <th>Result</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>BSc</td>
-                            <td>University of Dhaka</td>
-                            <td>Applied Statistics and Data Science</td>
-                            <td>------</td>
-                            <td>------</td>
-                            <td>------</td>
-                        </tr>
-                        <tr>
-                            <td>HSC</td>
-                            <td>Cumilla</td>
-                            <td>Science</td>
-                            <td>GPA 5.00</td>
-                            <td>2025</td>
-                            <td><a href="Screenshot 2025-10-16 131408.png">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>SSC</td>
-                            <td>Cumilla</td>
-                            <td>Science</td>
-                            <td>GPA 5.00</td>
-                            <td>2023</td>
-                            <td><a href="WhatsApp Image 2026-06-12 at 11.05.06 PM.jpeg">View</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- ===== ADMISSION INFORMATION ===== -->
-        <section class="card">
-            <h2 class="section-title">Admission Information</h2>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>University Name</th>
-                            <th>Rank</th>
-                            <th>Status</th>
-                            <th>Result</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>University of Dhaka (DU)</td>
-                            <td>1511<sup>th</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="DU result H.jpeg">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Bangladesh University of Textiles (BUTEX)</td>
-                            <td>1946<sup>th</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="Butex result.png">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>University of Rajshahi (RU)</td>
-                            <td>119<sup>th</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="RU result.png">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>University of Chittagong (CU)</td>
-                            <td>350<sup>th</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="cu_result_139167_a_general (1).pdf">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Jagannath University (JnU)</td>
-                            <td>185<sup>th</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="JnU result.png">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Jahangirnagar University (JU)</td>
-                            <td>291<sup>st</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="JU D result.pdf">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Rajshahi University of Engineering & Technology (RUET)</td>
-                            <td>3370<sup>th</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="ruet result.png">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Chittagong University of Engineering & Technology (CUET)</td>
-                            <td>1662<sup>nd</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="cuet result.png">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>GST Universities Admission Test</td>
-                            <td>2167<sup>th</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="WhatsApp Image 2026-06-12 at 10.50.13 PM.jpeg">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Shahjalal University of Science & Technology (SUST)</td>
-                            <td>5976<sup>th</sup></td>
-                            <td class="status-selected">Selected</td>
-                            <td><a href="WhatsApp Image 2026-06-12 at 10.29.20 PM.jpeg">View</a></td>
-                        </tr>
-                        <tr>
-                            <td>Medical & Dental Admission Test</td>
-                            <td>6448<sup>th</sup></td>
-                            <td style="color:#d97706; font-weight:600;">Waiting</td>
-                            <td><a href="Medi Result.png">View</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader"></div>
     </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#home" class="logo">Saad<span>.</span></a>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#education" class="nav-link">Education</a></li>
+                <li><a href="#admissions" class="nav-link">Admissions</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+
+            <div class="nav-controls">
+                <button class="theme-btn" id="theme-toggle" aria-label="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero container">
+        <div class="hero-content reveal">
+            <span class="greeting">Assalamu Alaikum</span>
+            <h1>I am Saad Ahmad Shuvo</h1>
+            <div class="typing-text">I'm a <span id="typed"></span><span class="cursor">|</span></div>
+            <p class="hero-desc">Assalamu Alaikum. I am Saad Ahmad Shuvo, a student of Applied Statistics and Data Science at the University of Dhaka. Having completed my Higher Secondary education from Brahmanbaria Government College, I have developed a strong interest in data-driven problem-solving, personal development, and counseling.</p>
+            <div class="hero-cta">
+                <a href="#admissions" class="btn btn-primary"><i class="fa-solid fa-trophy"></i> View Admissions</a>
+                <a href="#contact" class="btn btn-outline">Contact Me</a>
+            </div>
+        </div>
+        <div class="hero-visual reveal">
+            <div class="blob"></div>
+            <div class="hero-img-box">
+                <img src="Main Application Face.png" alt="Saad Ahmad Shuvo" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop'">
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="section-padding">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">A brief overview of my background, personal details, and technical proficiencies.</p>
+            </div>
+            
+            <div class="about-grid">
+                <div class="about-text reveal">
+                    <h3>Data-Driven Thinker & Learner</h3>
+                    <p>Having completed my Higher Secondary education from Brahmanbaria Government College, I have developed a strong interest in data-driven problem-solving, personal development, and counseling. Alongside my academic journey, I actively collaborate with various educational institutes and organizations, contributing to initiatives focused on student support, guidance, and community development.</p>
+                    
+                    <div class="personal-info">
+                        <div class="info-item">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">Saad Ahmad Shuvo</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Father's Name</span>
+                            <span class="info-value">Hanif Ahmed</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Mother's Name</span>
+                            <span class="info-value">Nepa Akhter</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Date of Birth</span>
+                            <span class="info-value">15<sup>th</sup> Sept 2007</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Religion</span>
+                            <span class="info-value">Islam</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skills-container reveal">
+                    <h3>Core Competencies</h3>
+                    <div class="skill-item">
+                        <div class="skill-header"><span>Applied Statistics</span><span>90%</span></div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="90%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span>Data Analysis</span><span>85%</span></div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="85%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span>Problem Solving</span><span>80%</span></div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="80%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span>Counseling / Mentorship</span><span>75%</span></div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="75%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EDUCATION TIMELINE -->
+    <section id="education" class="section-padding" style="background: rgba(var(--bg-secondary), 0.5);">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">Academic Information</h2>
+                <p class="section-subtitle">My educational achievements and foundational academic milestones.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">Undergraduate</span>
+                        <h3 class="timeline-title">BSc</h3>
+                        <p class="timeline-inst">University of Dhaka</p>
+                        <p class="timeline-inst">Applied Statistics and Data Science</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2025</span>
+                        <h3 class="timeline-title">HSC</h3>
+                        <p class="timeline-inst">Cumilla Board</p>
+                        <p class="timeline-inst">Science</p>
+                        <span class="timeline-grade">GPA 5.00</span>
+                        <div style="margin-top: 15px;">
+                            <button class="view-btn-text view-btn" data-img="Screenshot 2025-10-16 131408.png" style="background: var(--accent-primary); color: white; padding: 6px 16px; border-radius: 8px; font-size: 0.85rem; border: none; cursor: pointer;">
+                                <i class="fa-solid fa-file-image"></i> View Certificate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2023</span>
+                        <h3 class="timeline-title">SSC</h3>
+                        <p class="timeline-inst">Cumilla Board</p>
+                        <p class="timeline-inst">Science</p>
+                        <span class="timeline-grade">GPA 5.00</span>
+                        <div style="margin-top: 15px;">
+                            <button class="view-btn-text view-btn" data-img="WhatsApp Image 2026-06-12 at 11.05.06 PM.jpeg" style="background: var(--accent-primary); color: white; padding: 6px 16px; border-radius: 8px; font-size: 0.85rem; border: none; cursor: pointer;">
+                                <i class="fa-solid fa-file-image"></i> View Certificate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ADMISSIONS HALL OF FAME -->
+    <section id="admissions" class="section-padding">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">Admission Information</h2>
+                <p class="section-subtitle">Complete list of university admission test rankings and outcomes across Bangladesh.</p>
+            </div>
+
+            <div class="filter-container reveal">
+                <button class="filter-btn active" data-filter="all">All Results (11)</button>
+                <button class="filter-btn" data-filter="selected">Selected (10)</button>
+                <button class="filter-btn" data-filter="waiting">Waiting (1)</button>
+            </div>
+
+            <div class="gallery-grid">
+                <!-- 1. DU -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="DU result H.jpeg" alt="DU Result" onerror="this.src='https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="DU result H.jpeg"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 1511<sup>th</sup></div>
+                        <h3 class="uni-name">University of Dhaka (DU)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 2. BUTEX -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="Butex result.png" alt="BUTEX Result" onerror="this.src='https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="Butex result.png"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 1946<sup>th</sup></div>
+                        <h3 class="uni-name">Bangladesh University of Textiles (BUTEX)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 3. RU -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="RU result.png" alt="RU Result" onerror="this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="RU result.png"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 119<sup>th</sup></div>
+                        <h3 class="uni-name">University of Rajshahi (RU)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 4. CU -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="cu_result_139167_a_general (1).pdf" alt="CU Result PDF" onerror="this.src='https://images.unsplash.com/photo-1568792923760-d70635a89fdc?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><a href="cu_result_139167_a_general (1).pdf" target="_blank" class="view-btn"><i class="fa-solid fa-file-pdf"></i></a></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 350<sup>th</sup></div>
+                        <h3 class="uni-name">University of Chittagong (CU)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 5. JnU -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="JnU result.png" alt="JnU Result" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="JnU result.png"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 185<sup>th</sup></div>
+                        <h3 class="uni-name">Jagannath University (JnU)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 6. JU -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="JU D result.pdf" alt="JU Result PDF" onerror="this.src='https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><a href="JU D result.pdf" target="_blank" class="view-btn"><i class="fa-solid fa-file-pdf"></i></a></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 291<sup>st</sup></div>
+                        <h3 class="uni-name">Jahangirnagar University (JU)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 7. RUET -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="ruet result.png" alt="RUET Result" onerror="this.src='https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="ruet result.png"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 3370<sup>th</sup></div>
+                        <h3 class="uni-name">Rajshahi University of Engineering & Technology (RUET)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 8. CUET -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="cuet result.png" alt="CUET Result" onerror="this.src='https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="cuet result.png"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 1662<sup>nd</sup></div>
+                        <h3 class="uni-name">Chittagong University of Engineering & Technology (CUET)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 9. GST -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="WhatsApp Image 2026-06-12 at 10.50.13 PM.jpeg" alt="GST Result" onerror="this.src='https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="WhatsApp Image 2026-06-12 at 10.50.13 PM.jpeg"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 2167<sup>th</sup></div>
+                        <h3 class="uni-name">GST Universities Admission Test</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 10. SUST -->
+                <div class="gallery-card reveal" data-category="selected">
+                    <div class="card-img-wrapper">
+                        <img src="WhatsApp Image 2026-06-12 at 10.29.20 PM.jpeg" alt="SUST Result" onerror="this.src='https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="WhatsApp Image 2026-06-12 at 10.29.20 PM.jpeg"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 5976<sup>th</sup></div>
+                        <h3 class="uni-name">Shahjalal University of Science & Technology (SUST)</h3>
+                        <span class="status selected">Selected</span>
+                    </div>
+                </div>
+
+                <!-- 11. MEDICAL -->
+                <div class="gallery-card reveal" data-category="waiting">
+                    <div class="card-img-wrapper">
+                        <img src="Medi Result.png" alt="Medical Result" onerror="this.src='https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?q=80&w=600&auto=format&fit=crop'">
+                        <div class="card-overlay"><button class="view-btn" data-img="Medi Result.png"><i class="fa-solid fa-expand"></i></button></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="uni-rank">Rank: 6448<sup>th</sup></div>
+                        <h3 class="uni-name">Medical & Dental Admission Test</h3>
+                        <span class="status waiting">Waiting</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section-padding" style="background: rgba(var(--bg-secondary), 0.5);">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Whether it's about data science, counseling, or just a friendly chat, feel free to reach out.</p>
+            </div>
+
+            <div class="contact-wrapper reveal">
+                <div class="contact-info">
+                    <h3>Let's Connect</h3>
+                    <p>I am always open to discussing data-driven projects, academic collaborations, or personal development strategies.</p>
+                    
+                    <div class="contact-method">
+                        <div class="method-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                        <div class="method-details">
+                            <h4>Call / WhatsApp</h4>
+                            <a href="https://wa.me/8801782226189" target="_blank">+880 1782 226 189</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="method-icon"><i class="fa-brands fa-facebook-f"></i></div>
+                        <div class="method-details">
+                            <h4>Facebook</h4>
+                            <a href="https://www.facebook.com/SaadAhmad379" target="_blank">Saad Ahmad Shuvo</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="method-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+                        <div class="method-details">
+                            <h4>LinkedIn</h4>
+                            <a href="https://www.linkedin.com/in/saad-ahmad-shuvo-729676366/" target="_blank">Saad Ahmad Shuvo</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="method-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="method-details">
+                            <h4>Location</h4>
+                            <span style="color: var(--text-secondary)">Dhaka, Bangladesh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-container">
+                    <form class="contact-form" id="whatsapp-form">
+                        <div class="form-group">
+                            <input type="text" id="wa-name" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="wa-number" class="form-control" placeholder="Your WhatsApp Number" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="wa-subject" class="form-control" placeholder="Subject">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="wa-message" class="form-control" placeholder="Your Message..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; background: #25D366; border: none; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);">
+                            Send to WhatsApp <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="logo" style="margin-bottom: 20px;">Saad<span>.</span></div>
+            <div class="social-links">
+                <a href="https://www.facebook.com/SaadAhmad379" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="https://wa.me/8801782226189" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="https://www.linkedin.com/in/saad-ahmad-shuvo-729676366/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                &copy; <span id="year"></span> Saad Ahmad Shuvo. Designed with <i class="fa-solid fa-heart" style="color: #ef4444;"></i> in Bangladesh.
+            </p>
+        </div>
+    </footer>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="modal" id="lightbox">
+        <span class="close-modal" id="close-lightbox">&times;</span>
+        <img src="" alt="Fullscreen Result" class="modal-content" id="lightbox-img">
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Preloader
+            const preloader = document.getElementById('preloader');
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => preloader.style.display = 'none', 500);
+                }, 500); 
+            });
+
+            // 2. Set Current Year in Footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // 3. Navbar Scroll Effect & Mobile Menu
+            const navbar = document.getElementById('navbar');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (navMenu.classList.contains('active')) {
+                    icon.classList.replace('fa-bars', 'fa-xmark');
+                } else {
+                    icon.classList.replace('fa-xmark', 'fa-bars');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    mobileMenuBtn.querySelector('i').classList.replace('fa-xmark', 'fa-bars');
+                });
+            });
+
+            // 4. Dark/Light Theme Toggle
+            const themeBtn = document.getElementById('theme-toggle');
+            const icon = themeBtn.querySelector('i');
+            const root = document.documentElement;
+            
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            if (currentTheme === 'dark') {
+                root.setAttribute('data-theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+
+            themeBtn.addEventListener('click', () => {
+                if (root.getAttribute('data-theme') === 'dark') {
+                    root.removeAttribute('data-theme');
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    root.setAttribute('data-theme', 'dark');
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+
+            // 5. Typing Effect for Hero Section
+            const words = ["Data Science Student.", "Problem Solver.", "Statistics Enthusiast.", "Counselor."];
+            let i = 0;
+            let timer;
+            const typedText = document.getElementById('typed');
+
+            function typingEffect() {
+                let word = words[i].split('');
+                var loopTyping = function() {
+                    if (word.length > 0) {
+                        typedText.innerHTML += word.shift();
+                    } else {
+                        setTimeout(deletingEffect, 2000);
+                        return false;
+                    }
+                    timer = setTimeout(loopTyping, 100);
+                };
+                loopTyping();
+            }
+
+            function deletingEffect() {
+                let word = words[i].split('');
+                var loopDeleting = function() {
+                    if (word.length > 0) {
+                        word.pop();
+                        typedText.innerHTML = word.join('');
+                    } else {
+                        if (words.length > (i + 1)) {
+                            i++;
+                        } else {
+                            i = 0;
+                        }
+                        typingEffect();
+                        return false;
+                    }
+                    timer = setTimeout(loopDeleting, 50);
+                };
+                loopDeleting();
+            }
+            typingEffect();
+
+            // 6. Scroll Reveal & Skill Bar Animation
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        const bars = entry.target.querySelectorAll('.skill-progress');
+                        bars.forEach(bar => bar.style.width = bar.getAttribute('data-width'));
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // 7. Admissions Gallery Filter
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const galleryCards = document.querySelectorAll('.gallery-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filterValue = btn.getAttribute('data-filter');
+
+                    galleryCards.forEach(card => {
+                        if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                            card.style.display = 'block';
+                            setTimeout(() => card.style.opacity = '1', 50);
+                        } else {
+                            card.style.opacity = '0';
+                            setTimeout(() => card.style.display = 'none', 300);
+                        }
+                    });
+                });
+            });
+
+            // 8. Lightbox Modal Functionality
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const viewBtns = document.querySelectorAll('.view-btn');
+            const closeLightbox = document.getElementById('close-lightbox');
+
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const imgSrc = btn.getAttribute('data-img');
+                    if (imgSrc) {
+                        e.preventDefault();
+                        lightboxImg.src = imgSrc;
+                        lightbox.classList.add('active');
+                    }
+                });
+            });
+
+            closeLightbox.addEventListener('click', () => lightbox.classList.remove('active'));
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) lightbox.classList.remove('active');
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                    lightbox.classList.remove('active');
+                }
+            });
+
+            // 9. WhatsApp Form Integration
+            document.getElementById('whatsapp-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('wa-name').value;
+                const number = document.getElementById('wa-number').value;
+                const subject = document.getElementById('wa-subject').value;
+                const message = document.getElementById('wa-message').value;
+
+                const whatsappMessage = `*New Contact Request from Portfolio Website*%0A%0A*Name:* ${name}%0A*WhatsApp Number:* ${number}%0A*Subject:* ${subject}%0A*Message:* ${message}`;
+                const targetPhone = '8801782226189';
+                const whatsappUrl = `https://wa.me/${targetPhone}?text=${whatsappMessage}`;
+                
+                window.open(whatsappUrl, '_blank');
+                this.reset();
+            });
+        });
+    </script>
 </body>
 </html>
